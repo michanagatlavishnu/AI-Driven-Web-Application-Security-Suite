@@ -1,0 +1,58 @@
+.home {
+  text-align: center;
+  margin-top: 150px;
+}
+
+.home h1 {
+  font-size: 50px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px #2563eb;
+}
+
+.home h2 {
+  margin-bottom: 15px;
+}
+
+.home p {
+  font-size: 20px;
+  margin-bottom: 25px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 60px;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  width: 250px;
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.3);
+  transition: 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+}
+
+.feature-card h3 {
+  margin-bottom: 10px;
+}
+
+.footer {
+  margin-top: 80px;
+  padding: 20px;
+  text-align: center;
+  color: #94a3b8;
+}

@@ -1,0 +1,32 @@
+.register-container{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.register-card{
+  width:450px;
+  background:#1e293b;
+  padding:30px;
+  border-radius:10px;
+  box-shadow:0 0 15px rgba(37,99,235,0.5);
+}
+
+.register-card h2{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.register-card input{
+  width:100%;
+  padding:12px;
+  margin-top:15px;
+  border:none;
+  border-radius:5px;
+}
+
+.register-card button{
+  width:100%;
+  margin-top:20px;
+}

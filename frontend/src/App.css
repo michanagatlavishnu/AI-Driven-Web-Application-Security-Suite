@@ -1,0 +1,89 @@
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #08142e;
+}
+
+.register-box {
+  width: 350px;
+  padding: 30px;
+  background: #16213e;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.register-box h2 {
+  text-align: center;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.register-box input {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.register-box button {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.register-box button:hover {
+  background: #1d4ed8;
+}
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #08142e;
+}
+
+.login-box {
+  width: 350px;
+  padding: 30px;
+  background: #16213e;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-box h2 {
+  color: white;
+  text-align: center;
+}
+
+.login-box input {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+}
+
+.login-box button {
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}

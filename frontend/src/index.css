@@ -1,0 +1,24 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background:#0f172a;
+  color:white;
+  font-family:Arial,sans-serif;
+}
+
+button{
+  background:#2563eb;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  cursor:pointer;
+  border-radius:5px;
+}
+
+button:hover{
+  background:#1d4ed8;
+}

@@ -1,0 +1,13 @@
+.scanner-container{
+  padding:30px;
+}
+
+.scanner-container input{
+  width:400px;
+  padding:10px;
+  margin-top:10px;
+}
+
+.scanner-container button{
+  margin-top:20px;
+}

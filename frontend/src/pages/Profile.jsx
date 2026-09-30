@@ -10,6 +10,14 @@ function Profile() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Change Password State
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordSuccess, setPasswordSuccess] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -55,6 +63,47 @@ function Profile() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/login");
+  };
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setPasswordError("");
+    setPasswordSuccess("");
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordError("Please fill in all password fields.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New password and confirmation do not match.");
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordError("New password must be at least 6 characters long.");
+      return;
+    }
+
+    try {
+      setPasswordLoading(true);
+      const res = await api.put("/api/users/change-password", {
+        currentPassword,
+        newPassword,
+        confirmPassword,
+      });
+
+      setPasswordSuccess(res.data?.message || "Password updated successfully!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err) {
+      setPasswordError(
+        err.response?.data?.message || "Failed to update password. Please check your current password."
+      );
+    } finally {
+      setPasswordLoading(false);
+    }
   };
 
   return (
@@ -191,6 +240,155 @@ function Profile() {
               Sign Out
             </button>
           </div>
+        </div>
+
+        {/* Change Password Card */}
+        <div
+          style={{
+            background: "#10244d",
+            padding: "35px",
+            borderRadius: "12px",
+            boxShadow: "0 0 15px rgba(0,0,0,0.5)",
+            marginBottom: "30px",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" }}>
+            <h2 style={{ fontSize: "22px", margin: 0, color: "#60a5fa" }}>🔐 Change Password</h2>
+          </div>
+          <p style={{ color: "#94a3b8", fontSize: "14px", marginTop: 0, marginBottom: "20px" }}>
+            Update your account password securely. Your new password must be at least 6 characters long.
+          </p>
+
+          {passwordSuccess && (
+            <div
+              style={{
+                background: "#064e3b",
+                color: "#a7f3d0",
+                border: "1px solid #059669",
+                padding: "12px 16px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+                fontSize: "14px",
+              }}
+            >
+              ✅ {passwordSuccess}
+            </div>
+          )}
+
+          {passwordError && (
+            <div
+              style={{
+                background: "#450a0a",
+                color: "#fca5a5",
+                border: "1px solid #dc2626",
+                padding: "12px 16px",
+                borderRadius: "8px",
+                marginBottom: "20px",
+                fontSize: "14px",
+              }}
+            >
+              ⚠️ {passwordError}
+            </div>
+          )}
+
+          <form onSubmit={handlePasswordChange}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+              <div>
+                <label style={{ display: "block", color: "#cbd5e1", fontSize: "14px", fontWeight: "600", marginBottom: "6px" }}>
+                  Current Password
+                </label>
+                <input
+                  type="password"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder="Enter your current password"
+                  autoComplete="current-password"
+                  required
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    background: "#08142e",
+                    border: "1px solid #1e3a8a",
+                    color: "white",
+                    padding: "12px 16px",
+                    borderRadius: "8px",
+                    fontSize: "15px",
+                    outline: "none",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", color: "#cbd5e1", fontSize: "14px", fontWeight: "600", marginBottom: "6px" }}>
+                  New Password
+                </label>
+                <input
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="Enter new password (min. 6 characters)"
+                  autoComplete="new-password"
+                  required
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    background: "#08142e",
+                    border: "1px solid #1e3a8a",
+                    color: "white",
+                    padding: "12px 16px",
+                    borderRadius: "8px",
+                    fontSize: "15px",
+                    outline: "none",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", color: "#cbd5e1", fontSize: "14px", fontWeight: "600", marginBottom: "6px" }}>
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter new password"
+                  autoComplete="new-password"
+                  required
+                  style={{
+                    width: "100%",
+                    boxSizing: "border-box",
+                    background: "#08142e",
+                    border: "1px solid #1e3a8a",
+                    color: "white",
+                    padding: "12px 16px",
+                    borderRadius: "8px",
+                    fontSize: "15px",
+                    outline: "none",
+                  }}
+                />
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={passwordLoading}
+                  style={{
+                    background: passwordLoading ? "#1d4ed880" : "#2563eb",
+                    color: "white",
+                    border: "none",
+                    padding: "12px 24px",
+                    borderRadius: "8px",
+                    cursor: passwordLoading ? "not-allowed" : "pointer",
+                    fontWeight: "bold",
+                    fontSize: "15px",
+                    marginTop: "6px",
+                  }}
+                >
+                  {passwordLoading ? "Updating Password..." : "Update Password"}
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </main>
 

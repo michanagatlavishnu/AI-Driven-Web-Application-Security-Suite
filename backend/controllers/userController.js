@@ -174,3 +174,80 @@ exports.getProfile = (req, res) => {
     res.json(result[0]);
   });
 };
+
+// ==============================
+// Change Password (Authenticated User)
+// ==============================
+exports.changePassword = async (req, res) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+  const userId = req.user?.id;
+
+  if (!userId) {
+    return res.status(401).json({ message: "Authentication required" });
+  }
+
+  if (!currentPassword || !newPassword || !confirmPassword) {
+    return res.status(400).json({
+      message: "Please provide current password, new password, and confirmation",
+    });
+  }
+
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({
+      message: "New password and confirmation do not match",
+    });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({
+      message: "New password must be at least 6 characters long",
+    });
+  }
+
+  // Retrieve current hashed password for authenticated user
+  const selectSql = "SELECT password FROM users WHERE id = ?";
+  db.query(selectSql, [userId], async (err, rows) => {
+    if (err) {
+      return res.status(500).json({ message: "Database query error", error: err.message });
+    }
+
+    if (!rows || rows.length === 0) {
+      return res.status(404).json({ message: "User account not found" });
+    }
+
+    const currentHash = rows[0].password;
+
+    try {
+      const isMatch = await bcrypt.compare(currentPassword, currentHash);
+      if (!isMatch) {
+        return res.status(400).json({ message: "Current password is incorrect" });
+      }
+
+      const isSamePassword = await bcrypt.compare(newPassword, currentHash);
+      if (isSamePassword) {
+        return res.status(400).json({
+          message: "New password must be different from current password",
+        });
+      }
+
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+      const updateSql = "UPDATE users SET password = ? WHERE id = ?";
+
+      db.query(updateSql, [hashedNewPassword, userId], (updateErr) => {
+        if (updateErr) {
+          return res.status(500).json({
+            message: "Failed to update password",
+            error: updateErr.message,
+          });
+        }
+
+        res.json({ message: "Password updated successfully" });
+      });
+    } catch (bcryptErr) {
+      res.status(500).json({
+        message: "Error processing password update",
+        error: bcryptErr.message,
+      });
+    }
+  });
+};

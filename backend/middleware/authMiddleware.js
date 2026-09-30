@@ -33,4 +33,23 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+const requireAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({
+      message: "Access Denied: Authentication required",
+    });
+  }
+
+  if (req.user.role !== "admin") {
+    return res.status(403).json({
+      message: "Access Denied: Administrator privileges required",
+    });
+  }
+
+  next();
+};
+
 module.exports = authMiddleware;
+module.exports.authMiddleware = authMiddleware;
+module.exports.requireAdmin = requireAdmin;
+

@@ -33,6 +33,7 @@ function initializeDatabase() {
       name VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
       password VARCHAR(255) NOT NULL,
+      role VARCHAR(50) NOT NULL DEFAULT 'user',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `;
@@ -60,8 +61,36 @@ function initializeDatabase() {
   pool.query(createUsersTable, (err) => {
     if (err) {
       console.warn("Database initialization (users table):", err.message);
+    } else {
+      // Check if role column exists for existing tables
+      pool.query("SHOW COLUMNS FROM users LIKE 'role'", (roleErr, rows) => {
+        if (!roleErr && rows && rows.length === 0) {
+          pool.query("ALTER TABLE users ADD COLUMN role VARCHAR(50) NOT NULL DEFAULT 'user'", (alterErr) => {
+            if (alterErr) console.warn("Could not add role column to users:", alterErr.message);
+            else console.log("Added role column to users table successfully");
+            promoteAdminIfConfigured();
+          });
+        } else {
+          promoteAdminIfConfigured();
+        }
+      });
     }
   });
+
+  function promoteAdminIfConfigured() {
+    const adminEmail = (process.env.ADMIN_EMAIL || "2300030425@kluniversity.in").toLowerCase().trim();
+    if (adminEmail) {
+      pool.query(
+        "UPDATE users SET role = 'admin' WHERE LOWER(TRIM(email)) = ?",
+        [adminEmail],
+        (promoteErr, promoteRes) => {
+          if (!promoteErr && promoteRes && promoteRes.affectedRows > 0) {
+            console.log(`Assigned admin role to ${adminEmail}`);
+          }
+        }
+      );
+    }
+  }
 
   pool.query(createScansTable, (err) => {
     if (err) {

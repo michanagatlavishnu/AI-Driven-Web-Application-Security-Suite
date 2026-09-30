@@ -6,6 +6,7 @@ require("./config/db");
 
 const userRoutes = require("./routes/userRoutes");
 const scanRoutes = require("./routes/scanRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.get("/health", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/scans", scanRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

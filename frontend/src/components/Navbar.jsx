@@ -79,6 +79,20 @@ function Navbar() {
             <NavLink to="/profile" style={navLinkStyle}>
               👤 {user?.name ? user.name.split(" ")[0] : "Profile"}
             </NavLink>
+            {user?.role === "admin" && (
+              <NavLink
+                to="/admin"
+                style={({ isActive }) => ({
+                  ...navLinkStyle({ isActive }),
+                  color: isActive ? "#fde68a" : "#f59e0b",
+                  background: isActive ? "#b4530930" : "transparent",
+                  fontWeight: "bold",
+                  border: "1px solid #f59e0b40",
+                })}
+              >
+                ⚡ Admin
+              </NavLink>
+            )}
             <button
               onClick={handleLogout}
               style={{

@@ -35,11 +35,13 @@ exports.register = async (req, res) => {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const insertSql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'user')";
+      const configuredAdmin = (process.env.ADMIN_EMAIL || "2300030425@kluniversity.in").toLowerCase().trim();
+      const initialRole = configuredAdmin && email.toLowerCase().trim() === configuredAdmin ? "admin" : "user";
+      const insertSql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
 
       db.query(
         insertSql,
-        [name.trim(), email.toLowerCase().trim(), hashedPassword],
+        [name.trim(), email.toLowerCase().trim(), hashedPassword, initialRole],
         (err, result) => {
           if (err) {
             // Fallback for tables prior to migration
@@ -99,7 +101,16 @@ exports.login = async (req, res) => {
     }
 
     const user = result[0];
-    const role = user.role || "user";
+    const configuredAdmin = (process.env.ADMIN_EMAIL || "2300030425@kluniversity.in").toLowerCase().trim();
+    let role = user.role || "user";
+
+    // Auto-promote designated admin account if not already promoted
+    if (configuredAdmin && user.email.toLowerCase().trim() === configuredAdmin && role !== "admin") {
+      role = "admin";
+      db.query("UPDATE users SET role = 'admin' WHERE id = ?", [user.id], (updErr) => {
+        if (updErr) console.warn("Failed to update admin role on login:", updErr.message);
+      });
+    }
 
     try {
       const isMatch = await bcrypt.compare(password, user.password);

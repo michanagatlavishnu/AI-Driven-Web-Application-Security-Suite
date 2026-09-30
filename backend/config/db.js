@@ -78,18 +78,19 @@ function initializeDatabase() {
   });
 
   function promoteAdminIfConfigured() {
-    const adminEmail = (process.env.ADMIN_EMAIL || "2300030425@kluniversity.in").toLowerCase().trim();
-    if (adminEmail) {
-      pool.query(
-        "UPDATE users SET role = 'admin' WHERE LOWER(TRIM(email)) = ?",
-        [adminEmail],
-        (promoteErr, promoteRes) => {
-          if (!promoteErr && promoteRes && promoteRes.affectedRows > 0) {
-            console.log(`Assigned admin role to ${adminEmail}`);
-          }
-        }
-      );
+    if (!process.env.ADMIN_EMAIL || process.env.ADMIN_EMAIL.trim() === "") {
+      return;
     }
+    const adminEmail = process.env.ADMIN_EMAIL.toLowerCase().trim();
+    pool.query(
+      "UPDATE users SET role = 'admin' WHERE LOWER(TRIM(email)) = ?",
+      [adminEmail],
+      (promoteErr, promoteRes) => {
+        if (!promoteErr && promoteRes && promoteRes.affectedRows > 0) {
+          console.log("Assigned admin role to configured ADMIN_EMAIL");
+        }
+      }
+    );
   }
 
   pool.query(createScansTable, (err) => {

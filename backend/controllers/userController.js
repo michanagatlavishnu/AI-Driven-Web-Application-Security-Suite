@@ -35,8 +35,8 @@ exports.register = async (req, res) => {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const configuredAdmin = (process.env.ADMIN_EMAIL || "2300030425@kluniversity.in").toLowerCase().trim();
-      const initialRole = configuredAdmin && email.toLowerCase().trim() === configuredAdmin ? "admin" : "user";
+      const configuredAdmin = process.env.ADMIN_EMAIL ? process.env.ADMIN_EMAIL.toLowerCase().trim() : null;
+      const initialRole = (configuredAdmin && email.toLowerCase().trim() === configuredAdmin) ? "admin" : "user";
       const insertSql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
 
       db.query(
@@ -101,10 +101,10 @@ exports.login = async (req, res) => {
     }
 
     const user = result[0];
-    const configuredAdmin = (process.env.ADMIN_EMAIL || "2300030425@kluniversity.in").toLowerCase().trim();
+    const configuredAdmin = process.env.ADMIN_EMAIL ? process.env.ADMIN_EMAIL.toLowerCase().trim() : null;
     let role = user.role || "user";
 
-    // Auto-promote designated admin account if not already promoted
+    // Auto-promote designated admin account if matching configured ADMIN_EMAIL
     if (configuredAdmin && user.email.toLowerCase().trim() === configuredAdmin && role !== "admin") {
       role = "admin";
       db.query("UPDATE users SET role = 'admin' WHERE id = ?", [user.id], (updErr) => {

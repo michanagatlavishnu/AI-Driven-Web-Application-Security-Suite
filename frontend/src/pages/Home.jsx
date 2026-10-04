@@ -1,32 +1,44 @@
-import { Link } from "react-router-dom";
-import { FaShieldAlt } from "react-icons/fa";
+import React from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import HeroSection from "../components/landing/HeroSection";
+import MetricsSection from "../components/landing/MetricsSection";
+import FeaturesSection from "../components/landing/FeaturesSection";
+import HowItWorksSection from "../components/landing/HowItWorksSection";
+import DashboardPreviewSection from "../components/landing/DashboardPreviewSection";
+import AISecuritySection from "../components/landing/AISecuritySection";
+import TrustSection from "../components/landing/TrustSection";
+import CTASection from "../components/landing/CTASection";
 import "./Home.css";
 
 function Home() {
   return (
-    <div className="home">
-      <div style={{ fontSize: "56px", color: "#60a5fa", marginBottom: "15px" }}>
-        <FaShieldAlt />
+    <div className="landing-page-root">
+      {/* Background Cyber Ambient Lights */}
+      <div className="cyber-ambient-bg">
+        <div className="ambient-orb orb-primary"></div>
+        <div className="ambient-orb orb-secondary"></div>
+        <div className="ambient-orb orb-purple"></div>
+        <div className="cyber-grid-overlay"></div>
       </div>
 
-      <h1>AI-Driven Web Application Security Suite</h1>
+      {/* Sticky Navigation */}
+      <Navbar />
 
-      <h2>Protect Your Web Applications</h2>
+      {/* Main Landing Sections */}
+      <main className="landing-content">
+        <HeroSection />
+        <MetricsSection />
+        <FeaturesSection />
+        <HowItWorksSection />
+        <DashboardPreviewSection />
+        <AISecuritySection />
+        <TrustSection />
+        <CTASection />
+      </main>
 
-      <p>
-        Scan websites, detect vulnerabilities, evaluate SSL & security headers, and get
-        intelligent remediation recommendations.
-      </p>
-
-      <div className="buttons">
-        <Link to="/login">
-          <button>Login</button>
-        </Link>
-
-        <Link to="/register">
-          <button>Register</button>
-        </Link>
-      </div>
+      {/* Enterprise SaaS Footer */}
+      <Footer />
     </div>
   );
 }

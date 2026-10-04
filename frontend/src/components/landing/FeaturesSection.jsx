@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FiCpu,
   FiSearch,
@@ -8,8 +8,11 @@ import {
   FiFileText,
   FiArrowUpRight,
 } from "react-icons/fi";
+import FeatureDetailsModal from "./FeatureDetailsModal";
 
 function FeaturesSection() {
+  const [activeFeatureId, setActiveFeatureId] = useState(null);
+
   const features = [
     {
       id: "ai-analysis",
@@ -126,14 +129,25 @@ function FeaturesSection() {
               <p className="feature-description">{feature.description}</p>
 
               <div className="feature-card-footer">
-                <span className="feature-learn-more">
-                  Learn about checks <FiArrowUpRight className="arrow-icon" />
-                </span>
+                <button
+                  type="button"
+                  className="feature-learn-more-btn"
+                  onClick={() => setActiveFeatureId(feature.id)}
+                  aria-label={`Explore checks for ${feature.title}`}
+                >
+                  Explore checks <FiArrowUpRight className="arrow-icon" />
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {/* Dynamic Feature Details Modal */}
+      <FeatureDetailsModal
+        featureId={activeFeatureId}
+        onClose={() => setActiveFeatureId(null)}
+      />
     </section>
   );
 }

@@ -166,14 +166,15 @@ function FeatureDetailsModal({ featureId, onClose }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
-  // Lock body scroll while modal is active
+  // Lock body scroll only when modal is actively open
   useEffect(() => {
+    if (!featureId || !FEATURE_DETAILS[featureId]) return;
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
-      document.body.style.overflow = originalOverflow;
+      document.body.style.overflow = originalOverflow || "";
     };
-  }, []);
+  }, [featureId]);
 
   if (!featureId || !FEATURE_DETAILS[featureId]) {
     return null;

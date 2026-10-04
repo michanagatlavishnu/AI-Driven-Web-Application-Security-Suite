@@ -4,10 +4,19 @@
   box-sizing:border-box;
 }
 
-body{
-  background:#0f172a;
-  color:white;
-  font-family:Arial,sans-serif;
+html,
+body,
+#root {
+  min-height: 100%;
+  height: auto;
+}
+
+body {
+  background: #0f172a;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 button{

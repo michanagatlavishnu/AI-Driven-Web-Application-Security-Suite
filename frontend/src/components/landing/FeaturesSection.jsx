@@ -144,10 +144,12 @@ function FeaturesSection() {
       </div>
 
       {/* Dynamic Feature Details Modal */}
-      <FeatureDetailsModal
-        featureId={activeFeatureId}
-        onClose={() => setActiveFeatureId(null)}
-      />
+      {activeFeatureId && (
+        <FeatureDetailsModal
+          featureId={activeFeatureId}
+          onClose={() => setActiveFeatureId(null)}
+        />
+      )}
     </section>
   );
 }
